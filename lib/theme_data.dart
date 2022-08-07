@@ -16,7 +16,7 @@ class MetatureTheme {
         onError: Colors.red.shade300,
         errorContainer: Colors.redAccent.shade400,
         onErrorContainer: Colors.redAccent.shade200,
-        outline: Color(0xff344e41),
+        outline: const Color(0xff344e41),
         background: const Color(0xffdad7cd),
         onBackground: const Color(0xff3a5a40),
         onSurface: const Color(0xff344e41),
@@ -26,8 +26,7 @@ class MetatureTheme {
 
   static ThemeData get darkMode => ThemeData.from(
       useMaterial3: true,
-      colorScheme: ColorScheme(
-        brightness: Brightness.dark,
+      colorScheme: ColorScheme.dark(
         primary: const Color(0xffa3b18a),
         onPrimary: const Color(0xff344e41),
         onPrimaryContainer: const Color(0xffa3b18a),
@@ -40,7 +39,7 @@ class MetatureTheme {
         onError: Colors.red.shade200,
         errorContainer: Colors.redAccent.shade700,
         onErrorContainer: Colors.red.shade700,
-        outline: Color(0xffdad7cd),
+        outline: const Color(0xffdad7cd),
         onBackground: const Color(0xffdad7cd),
         background: const Color(0xff16211b),
         onSurfaceVariant: const Color(0xffdad7cd),

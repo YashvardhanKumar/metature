@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:metature/components/buttons/dark_mode_toggler.dart';
+import 'package:metature/components/buttons/google_login_button.dart';
 import 'package:metature/components/buttons/hexagonal_buttons.dart';
 import 'package:metature/firebase_options.dart';
 import 'package:metature/routes/login_page.dart';
+import 'package:metature/routes/register_page.dart';
+import 'package:metature/routes/verify_page.dart';
 import 'package:metature/theme_data.dart';
 import 'package:provider/provider.dart';
 
@@ -13,8 +18,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider<ThemeDataProvider>(
-      create: (_) => ThemeDataProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeDataProvider>(
+          create: (_) => ThemeDataProvider(),
+        ),
+        ChangeNotifierProvider<GoogleSignInNotifier>(
+          create: (context) => GoogleSignInNotifier(),
+        )
+      ],
       child: const MyApp(),
     ),
   );
@@ -23,33 +35,53 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        scrollBehavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.touch,
+            PointerDeviceKind.stylus,
+            PointerDeviceKind.unknown,
+            PointerDeviceKind.invertedStylus,
+            PointerDeviceKind.trackpad,
+          },
+        ),
         theme: MetatureTheme.lightMode,
         darkTheme: MetatureTheme.darkMode,
         themeMode: Provider.of<ThemeDataProvider>(context).isDarkTheme
             ? ThemeMode.dark
             : ThemeMode.light,
-        title: 'Flutter Demo',
-        home: const HomePage());
+        title: 'Metature',
+        home: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const VerifyEmail();
+              }
+              return const HomePage();
+            }));
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Hero(
+            const Hero(
               tag: 'dark_mode_toggle',
               child: DarkModeToggler(),
             ),
@@ -79,15 +111,21 @@ class HomePage extends StatelessWidget {
                     tag: 'login_button',
                     child: FilledHexagonalButton(
                       onPressed: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => LoginPage())),
+                          MaterialPageRoute(builder: (_) => const LoginPage())),
                       child: const Text('Login'),
                     ),
                   ),
                 ),
                 Expanded(
-                  child: FilledTonalHexagonalButton(
-                    onPressed: () {},
-                    child: const Text('Register'),
+                  child: Hero(
+                    tag: 'register_button',
+                    child: FilledTonalHexagonalButton(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const RegisterPage())),
+                      child: const Text('Register'),
+                    ),
                   ),
                 ),
               ],

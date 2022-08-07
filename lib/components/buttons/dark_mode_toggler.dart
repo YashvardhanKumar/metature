@@ -42,8 +42,7 @@ class DarkModeToggler extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       type: MaterialType.transparency,
-      // color: Colors.black,
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       clipBehavior: Clip.hardEdge,
       child: IconButton(
           onPressed: Provider.of<ThemeDataProvider>(context).toggleTheme,
@@ -61,12 +60,12 @@ class DarkModeToggler extends StatelessWidget {
             child: Provider.of<ThemeDataProvider>(context).isDarkTheme
                 ? Icon(
                     Icons.light_mode_rounded,
-                    key: ValueKey('light'),
+                    key: const ValueKey('light'),
                     color: Theme.of(context).colorScheme.primary,
                   )
                 : Icon(
                     Icons.dark_mode_rounded,
-                    key: ValueKey('dark'),
+                    key: const ValueKey('dark'),
                     color: Theme.of(context).colorScheme.primary,
                   ),
           ),

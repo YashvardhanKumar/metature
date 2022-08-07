@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:metature/components/buttons/dark_mode_toggler.dart';
-import 'package:metature/components/form/login_form.dart';
+import 'package:metature/components/form/username_form.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
-  static String id = 'LoginPage';
+class UsernamePage extends StatelessWidget {
+  const UsernamePage({
+    Key? key,
+    required this.email,
+    required this.name,
+  }) : super(key: key);
+  final String email, name;
+  static String id = 'UsernamePage';
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,10 @@ class LoginPage extends StatelessWidget {
                   child: Image.asset('images/logo.png'),
                 ),
               ),
-              const LoginForm(),
+              UsernameForm(
+                name: name,
+                email: email,
+              ),
               const Hero(
                 tag: 'dark_mode_toggle',
                 child: DarkModeToggler(),
